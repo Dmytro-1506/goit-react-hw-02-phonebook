@@ -11,22 +11,62 @@ export class App extends Component {
     {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
     {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
   ],
-  filter: '',
+  filter: [],
   name: '',
-  number: ''
+  number: null
   }
   
   addContact = (event) => {
     event.preventDefault()
     const newId = nanoid();
     const newName = event.target.name.value;
-    const newContant = {
+    const newNumber = event.target.number.value;
+    const currentContact = {
       id: newId,
       name: newName,
-      number: ''
+      number: newNumber
     }
-    this.setState({ contacts: this.state.contacts.push(newContant) });
-    console.log(this.state.contacts)
+    const stateContacts = this.state.contacts;
+    stateContacts.find(contact => {
+      if (contact.name === newName) {
+        alert (`${newName} is already in contacts`)
+        return true
+      } else {
+        return false
+      }
+    }) || stateContacts.push(currentContact);
+    this.setState({ contacts: stateContacts })
+    event.target.reset()
+  }
+
+  findContacts = (event) => {
+    const nameContact = event.target.value;
+    this.setState({name: nameContact})
+    const contactsList = this.state.contacts;
+    const newContactsList = contactsList.filter((element) => {
+      const checkName = element.name.toLowerCase();
+      if (checkName.split(' ').find(name => {
+        return name.startsWith(nameContact)
+      })) {
+        return element
+      } else {
+        return null
+      }
+    })
+    this.setState({ filter: newContactsList })
+  }
+
+  deleteContact = (event) => {
+    const contactToDel = event.currentTarget.name;
+    const stateContacts = this.state.contacts;
+    const newContactsList = stateContacts.filter(contact => {
+      if (contact.name === contactToDel) {
+        return false
+      } else {
+        return contact
+      }
+    })
+    this.setState({ contacts: newContactsList })
   }
 
   render() {
@@ -43,9 +83,9 @@ export class App extends Component {
         }}
       >
         <Phonebook addContact={this.addContact} />
-        <Contacts list={this.state.contacts} />
+        <Contacts list={this.state.contacts} findContacts={this.findContacts} deleteContact={this.deleteContact} filter={this.state.filter} name={this.state.name} />
       </div>
-    );
+    )
   }
 }
 
