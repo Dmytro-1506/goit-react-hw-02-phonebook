@@ -1,9 +1,18 @@
-import './Phonebook.css'
+import './ContactForm.css'
+import { nanoid } from 'nanoid';
 
-export const Phonebook = ({addContact}) => {
-    return <ul className="phonebook">
-        <p className="title">Phonebook</p>
-        <form className='form' onSubmit={addContact}>
+export const ContactForm = ({ addContact }) => {
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const newContact = {
+    id: nanoid(),
+    name: event.target.name.value,
+    number: event.target.number.value
+    }
+    addContact(newContact);
+    event.target.reset()
+  }
+  return <form className='form' onSubmit={(event) => { onSubmit(event) }}>
             <p className='form-title'>Name</p>
             <input
   type="text"
@@ -22,5 +31,7 @@ export const Phonebook = ({addContact}) => {
 />
             <button className='form-btn' type='submit' >Add contact</button>
         </form>
-    </ul>
 }
+
+    // name: event.target.name.value,
+    // number: event.target.number.value

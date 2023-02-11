@@ -1,7 +1,8 @@
 import { Component } from 'react';
-import { Contacts } from './Contacts/Contacts';
-import { Phonebook } from './Phonebook/Phonebook';
-import { nanoid } from 'nanoid';
+import { ContactList } from './ContactList/ContactList';
+import { ContactForm } from './ContactForm/ContactForm';
+import { Filter } from './Filter/Filter';
+// import { nanoid } from 'nanoid';
 
 export class App extends Component {
   state = {
@@ -16,27 +17,20 @@ export class App extends Component {
   number: null
   }
   
-  addContact = (event) => {
-    event.preventDefault()
-    const newId = nanoid();
-    const newName = event.target.name.value;
-    const newNumber = event.target.number.value;
-    const currentContact = {
-      id: newId,
-      name: newName,
-      number: newNumber
+  addContact = (newContact) => {
+    const isExist = () => {
+      return this.state.contacts.find(contact => {
+        return (contact.name === newContact.name)
+      })
     }
-    const stateContacts = this.state.contacts;
-    stateContacts.find(contact => {
-      if (contact.name === newName) {
-        alert (`${newName} is already in contacts`)
-        return true
-      } else {
-        return false
-      }
-    }) || stateContacts.push(currentContact);
-    this.setState({ contacts: stateContacts })
-    event.target.reset()
+
+    if (isExist()) {
+      return alert(`${newContact.name} is already in contacts`)
+    } else {
+      return this.setState(prevState => {
+        return {contacts: [...prevState.contacts, newContact]}
+      })
+    }
   }
 
   findContacts = (event) => {
@@ -73,19 +67,21 @@ export class App extends Component {
     return (
       <div
         style={{
+          width: '800px',
           height: '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          // alignItems: 'center',
-          // fontSize: 40,
-          color: '#010101'
+          color: '#010101',
+          margin: '40px auto',
         }}
       >
-        <Phonebook addContact={this.addContact} />
-        <Contacts list={this.state.contacts} findContacts={this.findContacts} deleteContact={this.deleteContact} filter={this.state.filter} name={this.state.name} />
+          <h1 className="title">Phonebook</h1>
+        <ContactForm addContact={this.addContact} />
+        <h2 className="title">Contacts</h2>
+        <Filter findContacts={this.findContacts} />
+        <ContactList list={this.state.contacts} deleteContact={this.deleteContact} filter={this.state.filter} name={this.state.name} />
       </div>
     )
   }
 }
-
