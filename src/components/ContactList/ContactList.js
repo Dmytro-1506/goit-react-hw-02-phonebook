@@ -10,7 +10,9 @@ export const ContactList = ({ list, deleteContact, filter, name }) => {
     return <div className='contacts'>
         <ul className="contact-list">
             {curentContactsList.map(item => {
-                return <li key={item.id} className='contact-item'>{item.name}: {item.number}
+                return <li key={item.id} className='contact-item'>
+                    <span>{item.name} :</span>
+                    <span className='number'>{item.number}</span>
                         <button type="button" className='deleteBtn' name={item.name} onClick={deleteContact}>Delete contact</button>
                     </li>
             })}
