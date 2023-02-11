@@ -2,7 +2,6 @@ import { Component } from 'react';
 import { ContactList } from './ContactList/ContactList';
 import { ContactForm } from './ContactForm/ContactForm';
 import { Filter } from './Filter/Filter';
-// import { nanoid } from 'nanoid';
 
 export class App extends Component {
   state = {
@@ -12,9 +11,7 @@ export class App extends Component {
     {id: 'id-3', name: 'Eden Clements', number: '645-17-79'},
     {id: 'id-4', name: 'Annie Copeland', number: '227-91-26'},
   ],
-  filter: [],
-  name: '',
-  number: null
+  filter: '',
   }
   
   addContact = (newContact) => {
@@ -33,21 +30,8 @@ export class App extends Component {
     }
   }
 
-  findContacts = (event) => {
-    const nameContact = event.target.value;
-    this.setState({name: nameContact})
-    const contactsList = this.state.contacts;
-    const newContactsList = contactsList.filter((element) => {
-      const checkName = element.name.toLowerCase();
-      if (checkName.split(' ').find(name => {
-        return name.startsWith(nameContact)
-      })) {
-        return element
-      } else {
-        return null
-      }
-    })
-    this.setState({ filter: newContactsList })
+  filterContacts = (event) => {
+    this.setState({ filter: event.target.value })
   }
 
   deleteContact = (event) => {
@@ -79,8 +63,8 @@ export class App extends Component {
           <h1 className="title">Phonebook</h1>
         <ContactForm addContact={this.addContact} />
         <h2 className="title">Contacts</h2>
-        <Filter findContacts={this.findContacts} />
-        <ContactList list={this.state.contacts} deleteContact={this.deleteContact} filter={this.state.filter} name={this.state.name} />
+        <Filter findContacts={this.filterContacts} />
+        <ContactList list={this.state.contacts} deleteContact={this.deleteContact} filter={this.state.filter} />
       </div>
     )
   }
